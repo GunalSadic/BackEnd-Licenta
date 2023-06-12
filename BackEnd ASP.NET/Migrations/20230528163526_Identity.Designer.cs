@@ -4,6 +4,7 @@ using BackEnd_ASP.NET;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackEnd_ASP.NET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230528163526_Identity")]
+    partial class Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,50 +41,28 @@ namespace BackEnd_ASP.NET.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Avatars");
+                    b.ToTable("Avatar");
                 });
 
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Match", b =>
+            modelBuilder.Entity("BackEnd_ASP.NET.Entities.User", b =>
                 {
-                    b.Property<int>("MatchId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MatchId"));
-
-                    b.Property<int>("LosingUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WinningUserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MatchId");
-
-                    b.ToTable("Matches");
-                });
-
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Player", b =>
-                {
-                    b.Property<int>("PlayerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlayerId"));
-
-                    b.Property<string>("AspNetUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Elo")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PlayerId");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Players");
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -284,7 +265,7 @@ namespace BackEnd_ASP.NET.Migrations
 
             modelBuilder.Entity("BackEnd_ASP.NET.Entities.Avatar", b =>
                 {
-                    b.HasOne("BackEnd_ASP.NET.Entities.Player", "User")
+                    b.HasOne("BackEnd_ASP.NET.Entities.User", "User")
                         .WithOne("Avatar")
                         .HasForeignKey("BackEnd_ASP.NET.Entities.Avatar", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -344,7 +325,7 @@ namespace BackEnd_ASP.NET.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Player", b =>
+            modelBuilder.Entity("BackEnd_ASP.NET.Entities.User", b =>
                 {
                     b.Navigation("Avatar")
                         .IsRequired();

@@ -1,4 +1,5 @@
 using BackEnd_ASP.NET;
+using BackEnd_ASP.NET.Entities;
 
 namespace BackEnd_ASP;
 

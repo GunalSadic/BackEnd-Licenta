@@ -4,6 +4,7 @@ using BackEnd_ASP.NET;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackEnd_ASP.NET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230605142935_Gunal2")]
+    partial class Gunal2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,26 +41,7 @@ namespace BackEnd_ASP.NET.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Avatars");
-                });
-
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Match", b =>
-                {
-                    b.Property<int>("MatchId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MatchId"));
-
-                    b.Property<int>("LosingUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WinningUserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MatchId");
-
-                    b.ToTable("Matches");
+                    b.ToTable("Avatar");
                 });
 
             modelBuilder.Entity("BackEnd_ASP.NET.Entities.Player", b =>
@@ -81,7 +65,7 @@ namespace BackEnd_ASP.NET.Migrations
 
                     b.HasKey("PlayerId");
 
-                    b.ToTable("Players");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
