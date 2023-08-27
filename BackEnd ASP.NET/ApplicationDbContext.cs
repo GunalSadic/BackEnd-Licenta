@@ -16,7 +16,6 @@ namespace BackEnd_ASP.NET
         }
 
         public DbSet<Player> Players { get; set; }
-        public DbSet<Avatar> Avatars { get; set; }
         public DbSet<Match> Matches { get; set; }
     }
 }

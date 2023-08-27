@@ -18,16 +18,17 @@ namespace BackEnd_ASP.NET.Controllers
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IConfiguration configuration;
         private readonly ApplicationDbContext context;
+        private readonly ILogger<AccountsController> logger;    
 
         
         public AccountsController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
-            IConfiguration configuration, ApplicationDbContext context)
+            IConfiguration configuration, ApplicationDbContext context, ILogger<AccountsController> logger)
         {
             this.context = context;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
-
+            this.logger = logger;
         }
 
         #region Endpoints
@@ -41,10 +42,11 @@ namespace BackEnd_ASP.NET.Controllers
             if (result.Succeeded)
             {
                 context.Players.Add(new Entities.Player() { 
-                    AspNetUserId = user.Id,
+                    UserId = user.Id,
                     Elo = 1201,
                     GamesPlayed = 0,
-                    Email = user.Email
+                    Email = user.Email,
+                    Name = registrationData.Username
                 });
                 context.SaveChanges();
                 return BuildToken(registrationData);
@@ -98,11 +100,12 @@ namespace BackEnd_ASP.NET.Controllers
             var token = new JwtSecurityToken(issuer: null, audience: null,
                 claims: Claims, expires: expiraton, signingCredentials: creds);
 
-            return new AuthenticationResponse()
+            var b =  new AuthenticationResponse()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = expiraton
             };
+            return b;
         }
     }
 }

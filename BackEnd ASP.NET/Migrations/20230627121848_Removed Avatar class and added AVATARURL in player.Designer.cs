@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackEnd_ASP.NET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230612064702_addig-email")]
-    partial class addigemail
+    [Migration("20230627121848_Removed Avatar class and added AVATARURL in player")]
+    partial class RemovedAvatarclassandaddedAVATARURLinplayer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,25 +24,6 @@ namespace BackEnd_ASP.NET.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Avatar", b =>
-                {
-                    b.Property<int>("AvatarId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvatarId"));
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AvatarId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Avatars");
-                });
 
             modelBuilder.Entity("BackEnd_ASP.NET.Entities.Match", b =>
                 {
@@ -72,6 +53,10 @@ namespace BackEnd_ASP.NET.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlayerId"));
 
                     b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AvatarURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -288,17 +273,6 @@ namespace BackEnd_ASP.NET.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Avatar", b =>
-                {
-                    b.HasOne("BackEnd_ASP.NET.Entities.Player", "User")
-                        .WithOne("Avatar")
-                        .HasForeignKey("BackEnd_ASP.NET.Entities.Avatar", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -347,12 +321,6 @@ namespace BackEnd_ASP.NET.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Player", b =>
-                {
-                    b.Navigation("Avatar")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

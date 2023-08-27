@@ -5,13 +5,13 @@
 namespace BackEnd_ASP.NET.Migrations
 {
     /// <inheritdoc />
-    public partial class addigemail : Migration
+    public partial class AddingNameToPlayer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Email",
+                name: "Name",
                 table: "Players",
                 type: "nvarchar(max)",
                 nullable: false,
@@ -22,7 +22,7 @@ namespace BackEnd_ASP.NET.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Email",
+                name: "Name",
                 table: "Players");
         }
     }

@@ -23,28 +23,21 @@ namespace BackEnd_ASP.NET
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddSignalR();
-            services.AddCors(options =>
+            services.AddLogging(config =>
             {
-                var frontendURL = Configuration.GetValue<string>("frontend_url");
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-                });
+                config.AddConsole();
+                config.AddDebug();
+                config.SetMinimumLevel(LogLevel.Trace);
             });
-
-            services.AddIdentity<IdentityUser, IdentityRole>().
-                AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
                 options =>
                 {
                     options.Events = new JwtBearerEvents
-                    {
+                    {   
                         OnMessageReceived = context =>
                         {
                             var accessToken = context.Request.Query["access_token"];
-
                             if (!string.IsNullOrEmpty(accessToken))
                             {
                                 context.Token = accessToken;
@@ -52,6 +45,7 @@ namespace BackEnd_ASP.NET
                             return Task.CompletedTask;
                         }
                     };
+                    options.IncludeErrorDetails = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = false,
@@ -64,11 +58,29 @@ namespace BackEnd_ASP.NET
                     };
 
                 });
+            services.AddCors(options =>
+            {
+                var frontendURL = Configuration.GetValue<string>("frontend_url");
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                });
+            });
+            services.AddIdentity<IdentityUser, IdentityRole>().
+                AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-      
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chess"));
+            }
             app.UseRouting();
+
             app.UseCors();
 
             app.UseAuthentication();

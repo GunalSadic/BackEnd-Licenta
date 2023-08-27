@@ -4,6 +4,7 @@ using BackEnd_ASP.NET;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackEnd_ASP.NET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230629162643_Changed Match info")]
+    partial class ChangedMatchinfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +33,6 @@ namespace BackEnd_ASP.NET.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MatchId"));
 
-                    b.Property<bool>("IsDraw")
-                        .HasColumnType("bit");
-
                     b.Property<int>("LosingPlayerId")
                         .HasColumnType("int");
 
@@ -40,10 +40,6 @@ namespace BackEnd_ASP.NET.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("MatchId");
-
-                    b.HasIndex("LosingPlayerId");
-
-                    b.HasIndex("WinningPlayerId");
 
                     b.ToTable("Matches");
                 });
@@ -55,6 +51,10 @@ namespace BackEnd_ASP.NET.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlayerId"));
+
+                    b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AvatarURL")
                         .HasColumnType("nvarchar(max)");
@@ -69,17 +69,7 @@ namespace BackEnd_ASP.NET.Migrations
                     b.Property<int>("GamesPlayed")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("PlayerId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Players");
                 });
@@ -280,36 +270,6 @@ namespace BackEnd_ASP.NET.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Match", b =>
-                {
-                    b.HasOne("BackEnd_ASP.NET.Entities.Player", "LosingPlayer")
-                        .WithMany()
-                        .HasForeignKey("LosingPlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BackEnd_ASP.NET.Entities.Player", "WinningPlayer")
-                        .WithMany()
-                        .HasForeignKey("WinningPlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LosingPlayer");
-
-                    b.Navigation("WinningPlayer");
-                });
-
-            modelBuilder.Entity("BackEnd_ASP.NET.Entities.Player", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -9,10 +9,16 @@ namespace BackEnd_ASP.NET.Entities
         [Key]
         public int MatchId { get; set; }
 
-        [ForeignKey("User")]
-        public int WinningUserId { get; set; }
+        [ForeignKey("WinningPlayer")]
+        public int WinningPlayerId { get; set; }
 
-        [ForeignKey("User")]
-        public int LosingUserId { get; set; }
+        public virtual Player WinningPlayer { get; set; }
+
+        [ForeignKey("LosingPlayer")]
+        public int LosingPlayerId { get; set; }
+
+        public virtual Player LosingPlayer { get; set; }
+
+        public bool IsDraw { get; set; }
     }
 }
